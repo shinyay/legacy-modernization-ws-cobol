@@ -1,6 +1,6 @@
-# COBOL Sample Application
+# Legacy Application Modernization for COBOL with GitHub Copilot
 
-This repository contains a COBOL program that demonstrates basic data handling and processing.
+This repository contains content for a workshop aimed at modernizing legacy applications with GitHub Copilot.
 
 ## Description
 
