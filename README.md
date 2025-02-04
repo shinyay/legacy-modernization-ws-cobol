@@ -21,7 +21,6 @@ The legacy applications targeted are applications in COBOL.
 
 ## References
 
-
 - [JDoodle](https://www.jdoodle.com/)
   - [Demo](https://www.jdoodle.com/ia/1zPE)
 ## Licence
