@@ -4,8 +4,7 @@ This repository contains content for a workshop aimed at modernizing legacy appl
 
 ## Description
 
-This COBOL program is a simple payroll system.
-Using this applicarion, I will provide a COBOL migration workshop.
+The legacy applications targeted are applications in COBOL.
 
 - [Workshop Scenario](./workshop-scenario.md)
 
