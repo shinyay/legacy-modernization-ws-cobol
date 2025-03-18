@@ -1,6 +1,6 @@
 # COBOL Development Container Sample
 
-This is a sample project demonstrating COBOL development using Visual Studio Code Dev Containers. The project includes a simple COBOL program that displays a welcome message and the current date.
+This is a sample project demonstrating COBOL development using Visual Studio Code Dev Containers. The project includes a simple COBOL program that displays a welcome message and the current date, as well as a comprehensive Syllabus Management System showcasing typical legacy COBOL application patterns.
 
 ## Prerequisites
 
@@ -57,81 +57,263 @@ Once inside the Dev Container, you can build and run the application using VS Co
 
 ## Project Structure
 
-- `src/hello.cob`: Main COBOL source file
+- `src/hello.cob`: Simple demo COBOL program that displays welcome message and current date
+- `src/SYLABUS.cbl`: Main program (controller) of the Syllabus Management System
+- `src/SYLREG.cbl`: Syllabus Registration Program
+- `src/SYLUPD.cbl`: Syllabus Update Program
+- `src/SYLDEL.cbl`: Syllabus Delete Program
+- `src/SYLQRY.cbl`: Syllabus Query Program
+- `src/SYLLST.cbl`: Syllabus Listing Program
+- `src/SYLRPT.cbl`: Syllabus Report Generation Program
+- `src/SYLCOM.cbl`: Common Routines (Subprogram)
+- `src/copybooks/`: Directory containing record definitions
+  - `SYLFILE.cpy`: Syllabus file record definition
+  - `DEPFILE.cpy`: Department file record definition
+  - `TEAFILE.cpy`: Teacher file record definition
 - `Makefile`: Build configuration
 - `.devcontainer/`: Dev Container configuration files
 - `bin/`: Build output directory (created during build)
 
-## Features
+# Syllabus Management System
 
-The sample COBOL program demonstrates:
-- Basic COBOL program structure
-- Date handling
-- Formatted output display
+The Syllabus Management System is a comprehensive application that demonstrates classic COBOL enterprise application patterns and techniques. This sample recreates many features found in traditional legacy systems that are commonly seen in educational institutions, financial services, and insurance companies.
 
-## VS Code COBOL Development Features
+## System Architecture
 
-This Dev Container comes with enhanced COBOL development support through the following VS Code extensions:
+The system employs a hierarchical program structure with modular design — a traditional COBOL development approach where each program specializes in a specific function:
 
-- **COBOL Language Support** (bitlang.cobol): Basic COBOL syntax highlighting and language support
-- **Z Open Editor** (ibm.zopeneditor): Advanced COBOL editing features from IBM
-- **COBOL Language Support** (broadcom.cobol-language-support): Additional COBOL language features
-- **Code Spell Checker** (streetsidesoftware.code-spell-checker): Helps catch spelling errors in comments and strings
-- **Background Copy** (kainino.backgroundcopy): Improves handling of COPY statements
+### Main Modules
 
-### COBOL-Specific Settings
+1. **SYLABUS.cbl** - Main Controller Program
+   - Serves as the entry point and main menu
+   - Orchestrates calls to other specialized modules
+   - Handles user input for menu navigation
 
-The environment is preconfigured with COBOL-optimized settings:
+2. **SYLREG.cbl** - Syllabus Registration Program
+   - Implements the Create operation of CRUD
+   - Provides screen interfaces for data entry
+   - Validates input data through SYLCOM calls
+   - Writes new syllabus records to the indexed file
 
-- **Column Rulers**: Visual guides at columns 6, 7, and 72 (standard COBOL card format)
-- **Indentation**: Single space indentation with spaces (not tabs)
-- **Format on Save**: Automatic code formatting when saving files
-- **Semantic Highlighting**: Enhanced syntax highlighting for better code readability
-- **Whitespace Visualization**: All whitespace characters are visible for precise formatting
-- **Division Formatting**: Automatic alignment and formatting of COBOL divisions
+3. **SYLUPD.cbl** - Syllabus Update Program
+   - Implements the Update operation of CRUD
+   - Allows modification of existing syllabus records
+   - Provides field-by-field update options
+   - Uses dynamic file access mode for record retrieval and update
 
-### Editor Features
+4. **SYLDEL.cbl** - Syllabus Delete Program
+   - Implements the Delete operation of CRUD
+   - Provides confirmation before deletion
+   - Removes syllabus records from indexed file
+   - Handles deletion error cases
 
-- Automatic formatting on type, paste, and save
-- Smart COBOL-aware indentation
-- Disabled word-based suggestions for more accurate COBOL completions
-- Preserved additional spaces for maintaining COBOL formatting
-- Paragraph indicators for better code structure visualization
+5. **SYLQRY.cbl** - Syllabus Query Program
+   - Implements the Read operation of CRUD
+   - Retrieves and displays detailed information about a specific syllabus
+   - Shows both basic information and weekly plan details
+   - Uses screen-oriented display with pagination
 
-## Installation
+6. **SYLLST.cbl** - Syllabus Listing Program
+   - Provides list functionality with filtering options
+   - Implements pagination for viewing multiple records
+   - Offers department, teacher, and semester-based filtering
+   - Uses dynamic record counting and display
 
-1. Create `.devcontainer` directory:
-```shell
-mkdir -p .devcontainer
+7. **SYLRPT.cbl** - Report Generation Program
+   - Creates formatted reports from syllabus data
+   - Offers multiple report types and filtering options
+   - Outputs to sequential text files for printing
+   - Includes header, detail, and summary sections
+
+8. **SYLCOM.cbl** - Common Utilities Subprogram
+   - Provides shared functionality for other modules
+   - Implements data validation routines
+   - Offers date handling and formatting services
+   - Uses parameter passing for flexible operations
+
+## Core COBOL Features Demonstrated
+
+### 1. Screen Section for Text-Based UI
+
+The application extensively uses the COBOL Screen Section to create text-based interfaces typical of traditional terminal applications:
+
+```cobol
+SCREEN SECTION.
+01 SYLLABUS-INPUT-SCREEN.
+    05 BLANK SCREEN.
+    05 LINE 1 COLUMN 1 VALUE "シラバス登録画面".
+    05 LINE 3 COLUMN 1 VALUE "科目コード (例: CS1001): ".
+    05 LINE 3 COLUMN 28 PIC X(6) USING SYL-COURSE-ID.
 ```
 
-2. Create the following files in `.devcontainer`:
+This demonstrates:
+- Terminal screen clearing with BLANK SCREEN
+- Absolute positioning using LINE and COLUMN clauses
+- Field definition with input/output capabilities
+- Form-based data entry system
 
-### Dockerfile
-Container definition that sets up the COBOL development environment:
-- Uses Ubuntu 22.04 slim as the base image
-- Multi-stage build to minimize image size
-- Installs GnuCOBOL compiler and required libraries
-- Includes essential development tools (git, curl)
-- Optimized to reduce container size by only including necessary components
+### 2. File Operations and Persistence
 
-### compose.yaml
-Docker Compose configuration for container orchestration:
-- Builds container from local Dockerfile
-- Mounts workspace directory for source code access
-- Sets resource limits (memory: 1GB, CPU shares)
-- Keeps container running with `sleep infinity`
-- Enables init process for proper signal handling
+The application showcases indexed file handling for data persistence:
 
-### devcontainer.json
-VS Code Dev Container configuration:
-- Specifies the container name and workspace location
-- Integrates with Docker Compose configuration
-- Installs COBOL extension for syntax highlighting
-- Configures terminal settings for better development experience
-- Sets root as the remote user for development
+```cobol
+ENVIRONMENT DIVISION.
+INPUT-OUTPUT SECTION.
+FILE-CONTROL.
+    SELECT SYLLABUS-FILE
+        ASSIGN TO "syllabus.dat"
+        ORGANIZATION IS INDEXED
+        ACCESS MODE IS DYNAMIC
+        RECORD KEY IS SYL-COURSE-ID
+        FILE STATUS IS WS-FILE-STATUS.
+```
 
-3. VS Code will automatically detect the Dev Container configuration
+Key features:
+- INDEXED organization (similar to VSAM files in mainframe systems)
+- DYNAMIC access mode for both sequential and random access
+- Primary key definition (SYL-COURSE-ID)
+- Error handling using FILE STATUS
+
+### 3. Complex Data Structures
+
+The system uses copybooks for data structure definitions:
+
+- **SYLFILE.cpy**: Defines the syllabus record structure with course information and weekly plans
+- **DEPFILE.cpy**: Defines the department record structure
+- **TEAFILE.cpy**: Defines the teacher record structure
+
+These structures likely include:
+- Nested hierarchy with group items
+- OCCURS clauses for table handling (seen in weekly plan implementation)
+- Reusable definitions across multiple programs
+
+### 4. Control Flow and Program Logic
+
+The application demonstrates sophisticated COBOL control structures:
+
+```cobol
+EVALUATE WS-USER-CHOICE
+    WHEN 1
+        PERFORM CALL-SYLLABUS-REGISTER
+    WHEN 2
+        PERFORM CALL-SYLLABUS-UPDATE
+    WHEN 3
+        PERFORM CALL-SYLLABUS-DELETE
+    WHEN 4
+        PERFORM CALL-SYLLABUS-QUERY
+    WHEN 5
+        PERFORM CALL-SYLLABUS-LIST
+    WHEN 6
+        PERFORM CALL-REPORT-GENERATE
+    WHEN 9
+        MOVE 1 TO WS-EXIT-FLAG
+    WHEN OTHER
+        DISPLAY "無効な選択です。再試行してください。"
+END-EVALUATE.
+```
+
+Key programming patterns:
+- EVALUATE statements for multi-way branching (similar to switch/case)
+- PERFORM statements for procedure calls
+- Conditional looping with PERFORM UNTIL
+- Section and paragraph organization
+
+### 5. Subprogram Communication
+
+The system demonstrates inter-program communication:
+
+```cobol
+CALL "SYLCOM" USING WS-FUNCTION-CODE, WS-PARAM-1,
+               WS-PARAM-2, WS-RESULT, WS-RETURN-CODE.
+```
+
+Features:
+- Static subprogram calls
+- Parameter passing by reference
+- Return code handling
+- Function code-based operation selection
+
+### 6. Error Handling Mechanism
+
+Robust error handling is implemented throughout:
+
+```cobol
+01 WS-FILE-STATUS           PIC XX VALUE "00".
+   88 WS-FILE-SUCCESS       VALUE "00".
+   88 WS-FILE-DUP           VALUE "22".
+   88 WS-FILE-NOT-FOUND     VALUE "23".
+```
+
+Key techniques:
+- Level-88 condition names for readable status checks
+- Explicit error message display
+- Exception handling in file operations
+- Status code propagation
+
+## CRUD Implementation
+
+The system provides a complete CRUD (Create, Read, Update, Delete) implementation:
+
+1. **Create**: SYLREG.cbl - Registration of new syllabus entries
+   - Data entry screens for all fields
+   - Multi-screen input for large datasets
+   - Validation before writing records
+
+2. **Read**: SYLQRY.cbl - Detailed query of syllabus information
+   - Key-based record retrieval
+   - Multi-screen display of comprehensive information
+   - Navigation through complex data
+
+3. **Update**: SYLUPD.cbl - Modification of existing syllabus entries
+   - Field-by-field updates
+   - Current data display before modification
+   - Complete or selective updates
+
+4. **Delete**: SYLDEL.cbl - Removal of syllabus entries
+   - Record selection by key
+   - Confirmation before deletion
+   - Status reporting after operation
+
+5. **List**: SYLLST.cbl - Filtered listing of syllabus entries
+   - Multiple filtering options
+   - Paginated display
+   - Summary information
+
+6. **Report**: SYLRPT.cbl - Formatted reporting
+   - Multiple report types
+   - Filtering and selection criteria
+   - Formatted output for printing
+
+## Business Domain
+
+The application models an educational institution's syllabus management system with these key entities:
+
+1. **Courses/Syllabi**: Core educational offerings with:
+   - Identification (course codes)
+   - Descriptive information (names, descriptions)
+   - Scheduling information (semester, credits)
+   - Weekly teaching plans
+
+2. **Departments**: Academic organizational units
+
+3. **Teachers**: Faculty members associated with courses
+
+This domain model demonstrates how COBOL applications typically represent business entities and relationships through file structures and program logic rather than through object-oriented models.
+
+## Conclusion
+
+The Syllabus Management System exemplifies classic COBOL application architecture with these characteristics:
+
+1. Modular architecture with specialized programs
+2. Screen Section for text-based user interfaces
+3. Indexed file operations for data persistence
+4. Complex data structures using copybooks
+5. Procedural programming paradigm with structured control flow
+6. Subprogram calling mechanisms
+7. Comprehensive error handling
+8. Complete CRUD implementation
+
+This sample effectively demonstrates the patterns and techniques found in many legacy COBOL applications still running critical business operations in various industries today, particularly in education, finance, insurance, and government sectors.
 
 ## References
 
