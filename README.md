@@ -2,6 +2,9 @@
 
 This repository contains workshop materials for learning how to analyze and modernize legacy COBOL applications. The workshop guides participants through the process of understanding an existing COBOL application and planning its modernization.
 
+*notes*
+*At this time, following these steps does not work properly for COBOL applications; it might be interesting to try to modify the COBOL application to work.*
+
 ## Workshop Overview
 
 This workshop simulates a real-world scenario where documentation for a legacy COBOL application has been lost, and participants must analyze, understand, and plan modernization approaches for the application. The workshop is structured as a series of tasks that build upon each other.
