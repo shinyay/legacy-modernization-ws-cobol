@@ -135,6 +135,81 @@ Notable configurations:
   - CPU allocation: 1024 shares
 - **Container Lifecycle**: Uses `sleep infinity` to keep the container running
 
+## Dev Container Architecture
+
+The following diagram illustrates the architecture and relationships between different components of the Dev Container configuration:
+
+```mermaid
+flowchart TB
+    User([User])
+    VSCode[Visual Studio Code]
+    DevContainer[Dev Container Extension]
+    DockerEngine[Docker Engine]
+    ContainerRegistry[Container Registry]
+    ContainerInstance[Container Instance]
+    Workspace[Workspace Files]
+
+    subgraph Configuration Files
+        DevContainerJson["devcontainer.json\n(VS Code settings, extensions)"]
+        ComposeYaml["compose.yaml\n(Docker Compose config)"]
+        Dockerfile["Dockerfile\n(Container image definition)"]
+    end
+
+    subgraph Container Components
+        COBOLCompiler["GnuCOBOL Compiler"]
+        VSCodeServer["VS Code Server"]
+        Extensions["VS Code Extensions"]
+        Tools["Developer Tools\n(Git, Make, etc)"]
+    end
+
+    User -->|Opens project in| VSCode
+    VSCode -->|Uses| DevContainer
+    DevContainer -->|Reads| DevContainerJson
+    DevContainerJson -->|References| ComposeYaml
+    ComposeYaml -->|References| Dockerfile
+    Dockerfile -->|Defines| ContainerImage
+
+    DockerEngine -->|Builds from| Dockerfile
+    DockerEngine -->|Pulls base image from| ContainerRegistry
+    DockerEngine -->|Creates| ContainerInstance
+
+    DevContainer -->|Configures| VSCodeServer
+    DevContainerJson -->|Installs| Extensions
+    ComposeYaml -->|Mounts| Workspace
+    Workspace -->|Accessed inside| ContainerInstance
+
+    ContainerInstance -->|Contains| COBOLCompiler
+    ContainerInstance -->|Contains| Tools
+    ContainerInstance -->|Runs| VSCodeServer
+    VSCodeServer -->|Uses| Extensions
+```
+
+### Explanation of Components
+
+1. **User Interaction Flow**:
+   - The user opens the project in VS Code
+   - VS Code's Dev Container extension detects the Dev Container configuration
+   - The extension reads `devcontainer.json` to understand the container setup
+   - Docker builds and starts the container using the configuration files
+
+2. **Configuration Files Relationships**:
+   - `devcontainer.json`: The main configuration file that VS Code reads
+   - `compose.yaml`: Referenced by devcontainer.json to set up Docker Compose
+   - `Dockerfile`: Referenced by compose.yaml to define the container image
+
+3. **Runtime Components**:
+   - **GnuCOBOL Compiler**: The main development tool for COBOL
+   - **VS Code Server**: A server-side component that runs inside the container
+   - **Extensions**: COBOL-specific extensions that enhance development
+   - **Developer Tools**: Additional tools like Git, Make, etc.
+
+4. **Data Flow**:
+   - The workspace files are mounted from the host into the container
+   - The compiler and tools inside the container can access these files
+   - VS Code communicates with its server running inside the container
+
+This architecture ensures that all development happens inside the isolated container environment while providing a seamless experience through VS Code.
+
 ## How the Dev Container Works in This Workshop
 
 When you open this project in VS Code:
