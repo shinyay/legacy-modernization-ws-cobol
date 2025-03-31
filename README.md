@@ -119,6 +119,47 @@ gh issue view ISSUE_NUMBER
 
 The repository contains a legacy COBOL application that participants will discover and analyze throughout the workshop. By exploring the source code and program structure, participants will gradually understand the application's purpose and functionality.
 
+### Application Purpose
+
+This application is a **Syllabus Management System** (シラバス管理システム) designed for educational institutions. It allows users to create, update, query, list, and generate reports for course syllabi. The system stores detailed information about each course including:
+
+- Basic course information (course ID, name, department, teacher, semester, credits)
+- Course descriptions and learning objectives
+- Weekly course plans (15 weeks of content)
+- Relationships to departments and teachers
+
+### Application Structure
+
+The system is composed of several interconnected COBOL programs:
+
+- **SYLABUS**: Main program that serves as the menu interface
+- **SYLREG**: Syllabus registration module
+- **SYLUPD**: Syllabus update module
+- **SYLDEL**: Syllabus deletion module
+- **SYLQRY**: Syllabus query/lookup module
+- **SYLLST**: Syllabus listing module
+- **SYLRPT**: Report generation module
+- **SYLCOM**: Common routines module shared by other programs
+
+### Data Files
+
+The application uses indexed files for data storage:
+- `syllabus.dat`: Main data file storing all syllabus records
+- `syllabus_report.txt`: Output file for generated reports
+
+### Technical Features
+
+The application demonstrates several technical aspects common in legacy COBOL systems:
+- Menu-driven terminal user interface
+- Indexed file handling (VSAM-style)
+- Screen section for form-based data entry
+- Multiple program modules with calls between them
+- Report generation
+- Data validation routines
+- File I/O error handling
+
+This system represents a typical line-of-business application that might be found in the administrative systems of educational institutions, making it an excellent candidate for modernization exercises.
+
 The workshop provides a realistic example for exploring modernization approaches for legacy systems commonly found in enterprise environments.
 
 ## License
