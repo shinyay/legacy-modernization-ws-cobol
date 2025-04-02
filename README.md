@@ -24,8 +24,8 @@ This workshop simulates a real-world scenario where documentation for a legacy C
 
 2. Clone your forked repository:
    ```bash
-   git clone https://github.com/your-username/legacy-modernization-ws-cobol-2503.git
-   cd legacy-modernization-ws-cobol-2503
+   git clone https://github.com/your-username/legacy-modernization-ws-cobol.git
+   cd legacy-modernization-ws-cobol
    ```
 
 3. Open the project in Visual Studio Code:
